@@ -24,7 +24,7 @@ jobs:
           TEST_CERT_SECRET_ROOT_CA: ${{ secrets.TEST_CERT_SECRET_ROOT_CA }}
           TEST_CERT_SECRET_ROOT_KEY: ${{ secrets.TEST_CERT_SECRET_ROOT_KEY }}
 
-      - run: mkdir public && cp server.* public
+      - run: cp server.* public
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
