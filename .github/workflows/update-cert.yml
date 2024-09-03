@@ -1,0 +1,33 @@
+name: UpdateCert
+on:
+  push:
+    branches:
+      - 'main'
+  schedule:
+    - cron: '28 14 7 * *'
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: 1.23
+
+      - run: go run ./cmd/gen-cert
+        env:
+          USE_ENV: 1
+          TEST_CERT_SECRET_ROOT_CA: ${{ secrets.TEST_CERT_SECRET_ROOT_CA }}
+          TEST_CERT_SECRET_ROOT_KEY: ${{ secrets.TEST_CERT_SECRET_ROOT_KEY }}
+
+      - run: mkdir public && cp server.* public
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+\
